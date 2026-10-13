@@ -52,6 +52,16 @@ replacing spreadsheets.
 - **Org chart / manager hierarchy**. Interesting for future "span of control"
   analytics, not needed to answer the pay questions in scope now.
 
+## Deployment
+
+Shipped as a reliable one-command local run (seed script + `npm run dev` on
+both sides) rather than a hosted URL. A live deployment needs real
+infrastructure decisions (where SQLite's file persists, what serves the
+Next.js build) that depend on accounts and constraints outside this exercise;
+a working `git clone && npm install && npm run seed && npm run dev` is more
+useful to a reviewer than a demo link that may be asleep, rate-limited, or
+gone by the time it's reviewed.
+
 ## Technical approach
 
 Node.js + TypeScript + Express REST API, Prisma + SQLite (per the assessment's own
