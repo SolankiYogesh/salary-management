@@ -61,7 +61,7 @@ function buildTitle(department: Department, level: Level): string {
 }
 
 function pick<T>(arr: readonly T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
+  return faker.helpers.arrayElement(arr);
 }
 
 interface GeneratedEmployee {
@@ -101,7 +101,7 @@ function generateSalaryHistory(
   now: Date,
 ): GeneratedSalaryRecord[] {
   const usdRate = EXCHANGE_RATES_TO_USD[currency];
-  const baseUsd = BASE_SALARY_USD[level] * (0.9 + Math.random() * 0.2);
+  const baseUsd = BASE_SALARY_USD[level] * faker.number.float({ min: 0.9, max: 1.1, fractionDigits: 4 });
   let currentUsd = baseUsd;
 
   const records: GeneratedSalaryRecord[] = [
@@ -124,8 +124,8 @@ function generateSalaryHistory(
     const effectiveDate = new Date(hireDate.getTime() + i * 365 * DAY_MS + faker.number.int({ min: -10, max: 10 }) * DAY_MS);
     if (effectiveDate > now) break;
 
-    currentUsd *= 1 + (0.03 + Math.random() * 0.05);
-    const reason = Math.random() < 0.15 ? "MARKET_ADJUSTMENT" : "ANNUAL_REVIEW";
+    currentUsd *= 1 + faker.number.float({ min: 0.03, max: 0.08, fractionDigits: 4 });
+    const reason = faker.datatype.boolean({ probability: 0.15 }) ? "MARKET_ADJUSTMENT" : "ANNUAL_REVIEW";
 
     records.push({
       id: crypto.randomUUID(),
@@ -149,7 +149,7 @@ function round2(value: number): number {
 function randomPastDate(yearsBack: number): Date {
   const now = Date.now();
   const past = now - yearsBack * 365 * DAY_MS;
-  return new Date(past + Math.random() * (now - past));
+  return faker.date.between({ from: new Date(past), to: new Date(now) });
 }
 
 async function chunkedCreateMany<T>(items: T[], size: number, create: (chunk: T[]) => Promise<unknown>) {
@@ -188,7 +188,7 @@ async function main() {
     const department = pick(DEPARTMENTS);
     const level = pick(LEVELS);
     const hireDate = randomPastDate(8);
-    const status = Math.random() < TERMINATED_RATIO ? "TERMINATED" : "ACTIVE";
+    const status = faker.datatype.boolean({ probability: TERMINATED_RATIO }) ? "TERMINATED" : "ACTIVE";
 
     employees.push({
       id: crypto.randomUUID(),
