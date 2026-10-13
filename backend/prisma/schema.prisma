@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Employee {
+  id           String   @id @default(uuid())
+  employeeCode String   @unique
+  firstName    String
+  lastName     String
+  email        String   @unique
+  gender       String
+  country      String
+  currency     String
+  department   String
+  jobTitle     String
+  level        String
+  status       String   @default("ACTIVE")
+  hireDate     DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  salaryRecords SalaryRecord[]
+
+  @@index([department])
+  @@index([country])
+  @@index([status])
+  @@index([lastName, firstName])
+}
+
+model SalaryRecord {
+  id            String   @id @default(uuid())
+  employeeId    String
+  amount        Float
+  currency      String
+  reason        String
+  effectiveDate DateTime
+  note          String?
+  createdAt     DateTime @default(now())
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@index([employeeId, effectiveDate])
+}
+
+model ExchangeRate {
+  currency   String @id
+  rateToUsd  Float
+}
