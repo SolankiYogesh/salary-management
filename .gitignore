@@ -11,3 +11,5 @@ build/
 coverage/
 .neon
 .env.local
+.vercel
+.env*
