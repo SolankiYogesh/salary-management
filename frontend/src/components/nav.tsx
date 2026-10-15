@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
+import { Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const LINKS = [
   { href: "/", label: "Dashboard" },
@@ -11,6 +14,7 @@ const LINKS = [
 
 export function Nav() {
   const pathname = usePathname();
+  const { resolvedTheme, setTheme } = useTheme();
 
   return (
     <header className="border-b bg-background">
@@ -33,6 +37,15 @@ export function Nav() {
             );
           })}
         </nav>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          className="ml-auto"
+          aria-label="Toggle color theme"
+          onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+        >
+          {resolvedTheme === "dark" ? <Sun /> : <Moon />}
+        </Button>
       </div>
     </header>
   );

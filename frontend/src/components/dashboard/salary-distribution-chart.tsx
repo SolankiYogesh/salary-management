@@ -18,10 +18,18 @@ export function SalaryDistributionChart({ data, loading }: { data?: HistogramBuc
   return (
     <ResponsiveContainer width="100%" height={280}>
       <BarChart data={chartData} margin={{ top: 8, right: 8, left: 8, bottom: 8 }}>
-        <CartesianGrid strokeDasharray="3 3" vertical={false} />
-        <XAxis dataKey="label" tick={{ fontSize: 10 }} interval={0} angle={-25} textAnchor="end" height={50} />
-        <YAxis width={40} tick={{ fontSize: 11 }} allowDecimals={false} />
-        <Tooltip formatter={(value) => `${value} employees`} />
+        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
+        <XAxis dataKey="label" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} interval={0} angle={-25} textAnchor="end" height={50} />
+        <YAxis width={40} tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} allowDecimals={false} />
+        <Tooltip
+          formatter={(value) => `${value} employees`}
+          contentStyle={{
+            backgroundColor: "var(--popover)",
+            borderColor: "var(--border)",
+            color: "var(--popover-foreground)",
+            fontSize: 12,
+          }}
+        />
         <Bar dataKey="count" fill="#16a34a" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>

@@ -19,8 +19,16 @@ export function CountryBreakdownChart({ data, loading }: { data?: GroupBreakdown
             <Cell key={entry.key} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Tooltip formatter={(value, _name, item) => [`${value} employees`, item.payload.key]} />
-        <Legend wrapperStyle={{ fontSize: 11 }} />
+        <Tooltip
+          formatter={(value, _name, item) => [`${value} employees`, item.payload.key]}
+          contentStyle={{
+            backgroundColor: "var(--popover)",
+            borderColor: "var(--border)",
+            color: "var(--popover-foreground)",
+            fontSize: 12,
+          }}
+        />
+        <Legend wrapperStyle={{ fontSize: 11, color: "var(--muted-foreground)" }} />
       </PieChart>
     </ResponsiveContainer>
   );
