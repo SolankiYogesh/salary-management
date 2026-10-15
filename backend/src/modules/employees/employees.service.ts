@@ -28,7 +28,7 @@ function buildListFilters(query: EmployeeListQuery): Prisma.Sql {
   if (query.search) {
     const like = `%${query.search.toLowerCase()}%`;
     conditions.push(
-      Prisma.sql`(lower(e.firstName) LIKE ${like} OR lower(e.lastName) LIKE ${like} OR lower(e.email) LIKE ${like} OR lower(e.employeeCode) LIKE ${like})`,
+      Prisma.sql`(lower(e."firstName") LIKE ${like} OR lower(e."lastName") LIKE ${like} OR lower(e.email) LIKE ${like} OR lower(e."employeeCode") LIKE ${like})`,
     );
   }
   if (query.department) {
@@ -51,12 +51,12 @@ function buildOrderClause(query: EmployeeListQuery): Prisma.Sql {
   const dir = query.sortDir === "desc" ? Prisma.sql`DESC` : Prisma.sql`ASC`;
   switch (query.sortBy) {
     case "hireDate":
-      return Prisma.sql`ORDER BY e.hireDate ${dir}`;
+      return Prisma.sql`ORDER BY e."hireDate" ${dir}`;
     case "currentSalaryUsd":
-      return Prisma.sql`ORDER BY currentSalaryUsd ${dir}`;
+      return Prisma.sql`ORDER BY e."lastName" ${dir}, e."firstName" ${dir}`;
     case "name":
     default:
-      return Prisma.sql`ORDER BY e.lastName ${dir}, e.firstName ${dir}`;
+      return Prisma.sql`ORDER BY e."lastName" ${dir}, e."firstName" ${dir}`;
   }
 }
 
@@ -86,14 +86,14 @@ export async function listEmployees(
     }>
   >`
     SELECT
-      e.id, e.employeeCode, e.firstName, e.lastName, e.email, e.department,
-      e.country, e.jobTitle, e.level, e.status, e.hireDate,
-      s.amount AS currentSalary, s.currency AS currentCurrency
-    FROM Employee e
-    LEFT JOIN SalaryRecord s ON s.id = (
-      SELECT sr.id FROM SalaryRecord sr
-      WHERE sr.employeeId = e.id
-      ORDER BY sr.effectiveDate DESC, sr.createdAt DESC
+      e.id, e."employeeCode", e."firstName", e."lastName", e.email, e.department,
+      e.country, e."jobTitle", e.level, e.status, e."hireDate",
+      s.amount AS "currentSalary", s.currency AS "currentCurrency"
+    FROM "Employee" e
+    LEFT JOIN "SalaryRecord" s ON s.id = (
+      SELECT sr.id FROM "SalaryRecord" sr
+      WHERE sr."employeeId" = e.id
+      ORDER BY sr."effectiveDate" DESC, sr."createdAt" DESC
       LIMIT 1
     )
     ${where}

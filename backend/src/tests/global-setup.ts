@@ -1,17 +1,21 @@
 import { execSync } from "node:child_process";
-import { existsSync, unlinkSync } from "node:fs";
+import { readFileSync } from "node:fs";
 
-const DB_FILE = "test.db";
+function testDatabaseUrl(): string {
+  const fromEnv = process.env.TEST_DATABASE_URL ?? process.env.DATABASE_URL_UNPOOLED;
+  if (fromEnv) return fromEnv;
+  const match = readFileSync("./.env", "utf8").match(/^TEST_DATABASE_URL="?([^"\n]+)"?/m);
+  if (!match) {
+    throw new Error("TEST_DATABASE_URL must be set in backend/.env to run tests");
+  }
+  return match[1];
+}
 
 export async function setup() {
-  if (existsSync(DB_FILE)) unlinkSync(DB_FILE);
   execSync("npx prisma db push --skip-generate --accept-data-loss", {
-    env: { ...process.env, DATABASE_URL: `file:${DB_FILE}` },
+    env: { ...process.env, DATABASE_URL: testDatabaseUrl() },
     stdio: "inherit",
   });
 }
 
-export async function teardown() {
-  if (existsSync(DB_FILE)) unlinkSync(DB_FILE);
-  if (existsSync(`${DB_FILE}-journal`)) unlinkSync(`${DB_FILE}-journal`);
-}
+export async function teardown() {}

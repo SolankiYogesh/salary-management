@@ -6,7 +6,8 @@ export const salariesRouter = Router({ mergeParams: true });
 
 salariesRouter.get("/", async (req, res, next) => {
   try {
-    const history = await listSalaryHistory(req.params.employeeId);
+    const { employeeId } = req.params as { employeeId: string };
+    const history = await listSalaryHistory(employeeId);
     res.json(history);
   } catch (err) {
     next(err);
@@ -16,7 +17,8 @@ salariesRouter.get("/", async (req, res, next) => {
 salariesRouter.post("/", async (req, res, next) => {
   try {
     const input = createSalaryRecordSchema.parse(req.body);
-    const record = await addSalaryRecord(req.params.employeeId, input);
+    const { employeeId } = req.params as { employeeId: string };
+    const record = await addSalaryRecord(employeeId, input);
     res.status(201).json(record);
   } catch (err) {
     next(err);

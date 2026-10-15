@@ -43,15 +43,15 @@ export async function getActiveEmployeeSalarySnapshots(): Promise<SalarySnapshot
       e.level as level,
       e.gender as gender,
       e.status as status,
-      COALESCE(s.amount * r.rateToUsd, 0) as currentSalaryUsd
-    FROM Employee e
-    LEFT JOIN SalaryRecord s ON s.id = (
-      SELECT sr.id FROM SalaryRecord sr
-      WHERE sr.employeeId = e.id
-      ORDER BY sr.effectiveDate DESC, sr.createdAt DESC
+      COALESCE(s.amount * r."rateToUsd", 0) as "currentSalaryUsd"
+    FROM "Employee" e
+    LEFT JOIN "SalaryRecord" s ON s.id = (
+      SELECT sr.id FROM "SalaryRecord" sr
+      WHERE sr."employeeId" = e.id
+      ORDER BY sr."effectiveDate" DESC, sr."createdAt" DESC
       LIMIT 1
     )
-    LEFT JOIN ExchangeRate r ON r.currency = s.currency
+    LEFT JOIN "ExchangeRate" r ON r.currency = s.currency
     WHERE e.status = 'ACTIVE'
   `;
 }
