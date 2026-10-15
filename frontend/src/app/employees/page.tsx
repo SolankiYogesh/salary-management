@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchEmployees, fetchMeta } from "@/lib/api";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { EmployeeFilters } from "@/components/employees/employee-filters";
 import { EmployeeTable } from "@/components/employees/employee-table";
 import { PaginationBar } from "@/components/employees/pagination-bar";
@@ -60,9 +61,12 @@ function EmployeesPageContent() {
             <EmployeeTable rows={employees.data?.items} loading={employees.isLoading} />
           </div>
           {employees.data && (
-            <div className="px-4">
-              <PaginationBar page={employees.data.page} totalPages={employees.data.totalPages} total={employees.data.total} />
-            </div>
+            <>
+              <Separator />
+              <div className="px-4">
+                <PaginationBar page={employees.data.page} totalPages={employees.data.totalPages} total={employees.data.total} />
+              </div>
+            </>
           )}
         </CardContent>
       </Card>

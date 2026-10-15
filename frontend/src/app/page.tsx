@@ -4,8 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchBreakdown, fetchDistribution, fetchGenderPayGap, fetchOverview } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatCompactNumber, formatUsd } from "@/lib/format";
-import { DepartmentPayChart } from "@/components/dashboard/department-pay-chart";
+import { PayrollBreakdownChart } from "@/components/dashboard/department-pay-chart";
 import { SalaryDistributionChart } from "@/components/dashboard/salary-distribution-chart";
 import { GenderPayGapTable } from "@/components/dashboard/gender-pay-gap-table";
 import { CountryBreakdownChart } from "@/components/dashboard/country-breakdown-chart";
@@ -19,6 +20,10 @@ export default function DashboardPage() {
   const byCountry = useQuery({
     queryKey: ["analytics", "breakdown", "country"],
     queryFn: () => fetchBreakdown("country"),
+  });
+  const byLevel = useQuery({
+    queryKey: ["analytics", "breakdown", "level"],
+    queryFn: () => fetchBreakdown("level"),
   });
   const distribution = useQuery({ queryKey: ["analytics", "distribution"], queryFn: fetchDistribution });
   const genderGap = useQuery({ queryKey: ["analytics", "gender-pay-gap"], queryFn: fetchGenderPayGap });
@@ -55,12 +60,27 @@ export default function DashboardPage() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
-          <CardHeader>
-            <CardTitle>Payroll by department</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <DepartmentPayChart data={byDepartment.data} loading={byDepartment.isLoading} />
-          </CardContent>
+          <Tabs defaultValue="department">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Payroll breakdown</CardTitle>
+              <TabsList>
+                <TabsTrigger value="department">Department</TabsTrigger>
+                <TabsTrigger value="country">Country</TabsTrigger>
+                <TabsTrigger value="level">Level</TabsTrigger>
+              </TabsList>
+            </CardHeader>
+            <CardContent>
+              <TabsContent value="department">
+                <PayrollBreakdownChart data={byDepartment.data} loading={byDepartment.isLoading} />
+              </TabsContent>
+              <TabsContent value="country">
+                <PayrollBreakdownChart data={byCountry.data} loading={byCountry.isLoading} />
+              </TabsContent>
+              <TabsContent value="level">
+                <PayrollBreakdownChart data={byLevel.data} loading={byLevel.isLoading} />
+              </TabsContent>
+            </CardContent>
+          </Tabs>
         </Card>
 
         <Card>

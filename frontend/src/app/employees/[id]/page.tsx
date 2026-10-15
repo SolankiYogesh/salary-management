@@ -5,6 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchEmployee, fetchMeta } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SalaryHistory } from "@/components/employees/salary-history";
 import { AddSalaryRecordDialog } from "@/components/employees/add-salary-record-dialog";
@@ -49,6 +51,8 @@ export default function EmployeeDetailPage() {
         <Badge variant={emp.status === "ACTIVE" ? "secondary" : "outline"}>{emp.status}</Badge>
       </div>
 
+      <Separator />
+
       <div className="grid gap-4 lg:grid-cols-3">
         <Card>
           <CardHeader>
@@ -82,8 +86,8 @@ export default function EmployeeDetailPage() {
 
 function Field({ label, value }: { label: string; value: string }) {
   return (
-    <div>
-      <p className="text-xs text-muted-foreground">{label}</p>
+    <div className="flex flex-col gap-1">
+      <Label className="text-xs font-normal text-muted-foreground">{label}</Label>
       <p className="font-medium">{value}</p>
     </div>
   );

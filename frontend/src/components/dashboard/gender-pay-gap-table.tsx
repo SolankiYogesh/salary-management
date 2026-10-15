@@ -32,7 +32,7 @@ export function GenderPayGapTable({ data, loading }: { data?: GenderGapRow[]; lo
               </TableCell>
               <TableCell className="text-right">
                 {row.gapPct === null ? (
-                  <span className="text-xs text-muted-foreground">n/a</span>
+                  <Badge variant="outline">n/a</Badge>
                 ) : (
                   <Badge variant={Math.abs(row.gapPct) > 5 ? "destructive" : "secondary"}>
                     {row.gapPct.toFixed(1)}%

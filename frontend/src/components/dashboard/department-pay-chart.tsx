@@ -5,7 +5,7 @@ import type { GroupBreakdown } from "@/lib/types";
 import { formatCompactNumber, formatUsd } from "@/lib/format";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function DepartmentPayChart({ data, loading }: { data?: GroupBreakdown[]; loading: boolean }) {
+export function PayrollBreakdownChart({ data, loading }: { data?: GroupBreakdown[]; loading: boolean }) {
   if (loading || !data) {
     return <Skeleton className="h-72 w-full" />;
   }
